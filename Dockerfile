@@ -18,9 +18,9 @@ RUN mix local.hex --force
 
 RUN mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez --force
 RUN mix archive.install https://raw.githubusercontent.com/phoenixframework/archives/master/phx_new.ez --force
-RUN mix phx.new hello --no-ecto
+RUN mix phx.new app
 
-WORKDIR hello
+WORKDIR /app
 RUN sed -i 's/cowboy/plug_cowboy/g' mix.exs
 RUN mix deps.get --force
 RUN mix local.rebar --force
