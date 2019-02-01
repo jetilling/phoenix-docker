@@ -1,0 +1,40 @@
+version: '3.7'
+services:
+
+  postgres:
+    image: postgres:10
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - phoenix_network
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.role == manager]
+
+  web:
+    image: phoenix-docker
+    environment:
+      - DATABASE_URL=postgresql://phoenix_postgres/app_prod
+    ports:
+      - 4000:4000
+    networks:
+      - phoenix_network
+    volumes:
+     - ./app:/app
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+networks:
+  phoenix_network:
+
+volumes:
+  db-data:
+  app:
